@@ -12,6 +12,12 @@ import java.util.*;
  *  list.add(1);
  *  .... list.add(11)
  *
+ *
+ *  what is fail safe  and fail fast?
+ *  fail safe: you will not receive any exception
+ *  fail fast: you will receive exception.
+ *  hashmap is fail fast (bc modcount will give  an exception)
+ *
  *  time complexity:
  *  add: O(1): O(N)
  *  add(index, element): O(N)
@@ -123,7 +129,7 @@ import java.util.*;
  * O(1)     O(logn)
  * arbitrary  sorted
  * yes for null   no for null
- * 
+ *
  *
  *
 
