@@ -59,6 +59,11 @@ import java.util.stream.Collectors;
  *   consumer:  void accept(T t); does not return and take one input
  *   supplier: T get(); does not take input and return result
  *
+ * summary runasync and supplyasyn:
+ * runasync: it is for runnable tasks, whereas supplyasync is for supplier task that do return a result
+ * executor customization: method without the executor argument use the common fork join pool
+ * while the methods with executor argument allows you to customze any thread pool
+ * 3: runAsync return type is CompletableFuture<Void>, whereas suuplyasync return type is CompletableFuture<U>
  *
  *
  *********email me your github link before 1 PM CDT*********
