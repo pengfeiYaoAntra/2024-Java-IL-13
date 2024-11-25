@@ -1,3 +1,6 @@
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
+
 /**
  * step 1: [System.out.println("hello word");] ->
  * step 2: Java complier -> complies my code into bytecode and generate .class file
@@ -107,7 +110,7 @@
  *
  *  *************volatile********************
  *
- *  what volatile?
+ *  what  is volatile?
  *  when you use volatile keyword for your resources(variable): this resources can be seen by other thread(read, update)
  *
  *                  thread A                                        thread B
@@ -122,14 +125,171 @@
  *                  all operations on shared variable must be performed in its local memory, you cannot
  *                  directly read from the main memory
  *
+ *prevent to  reodering
+ * int a = 1;
+ * int b = 1;
+ * compiling your code- >
+ * b = 1
+ * a = 1;
  *
+ *  volatile int a = 1;
+ *  volatile int b = 1;
+ *   compiling your code
+ * volatile int a = 1;
+ *  volatile int b = 1;
+ *
+ *  synchronized keyword
+ *
+ *  scenario1 : diff thread use same object
  *
  */
 public class Day4 {
-    public static void main(String[] args) {
-        System.out.println("hello word");
-        // how many thread(s) we are using now
-//        Thread.run();// why is 1 for run() function: we are using main thread here
-//        thread.start();// we are using main thread and one thread create by start() function = 2
+//    public static void main(String[] args) {
+//        System.out.println("hello word");
+//        // how many thread(s) we are using now
+////        Thread.run();// why is 1 for run() function: we are using main thread here
+////        thread.start();// we are using main thread and one thread create by start() function = 2
+//
+//
+//
+//    }
+
+    //scenario1 : diff thread use same object
+    // we have multiple synchronized method in one current object: com. As long as one thread
+    // call on synchronized method at certain time, all other threads have to wait the first thread to finished
+    // in this case, synchronized can lock current object: "this"
+//    public synchronized void sendEmail(){
+//        try{
+//            TimeUnit.SECONDS.sleep(3);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+//        System.out.println("step 1: sending an email");
+//        System.out.println("Step 2: finished!");
+//    }
+//
+//    public synchronized void sendSMS(){
+//        System.out.println("step 3: sending a message!");
+//    }
+//
+//    public static void main(String[] args) {
+//        Day4 com = new Day4();
+//        new Thread(()->{
+//            com.sendEmail();
+//        },"thread 1").start();
+//        new Thread(()->{
+//            com.sendSMS();
+//        },"Thread 2").start();
+//
+//    }
+
+
+    // case 2: diff thread call one sync method and one normal method
+    //when we call synchronized and non - synchronized methods at the same time using diff thread, there is not resources competition
+    // when we using diff object call all synchronized method at the same time, there is also not resources competition.
+//
+//    public synchronized void sendEmail(){
+//        try{
+//            TimeUnit.SECONDS.sleep(3);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+//        System.out.println("step 1: sending an email");
+//        System.out.println("Step 2: finished!");
+//    }
+//
+//    public synchronized void sendSMS(){
+//        System.out.println("step 3: sending a message!");
+//    }
+//    public void phoneCall(){
+//        System.out.println("step 4: I am calling someone");
+//    }
+//
+//    public static void main(String[] args) {
+//        Day4 com = new Day4();
+//        Day4 com1 = new Day4();
+//        new Thread(()->{
+//            com.sendEmail();
+//        },"thread 1").start();
+////        new Thread(()->{
+////            com.phoneCall();
+////        },"Thread 2").start(); --> this case step 4 print first
+//        new Thread(()->{
+//            com1.sendSMS();
+//        },"Thread 2").start(); //--> this case step 3 print first
+//
+//    }
+
+
+
+    //case 3:
+    // if you are using static method, and threads are calling all static and sync methods, the locker will lock
+    // class itself. (NOT object)
+
+//    public static synchronized void sendEmail(){
+//        try{
+//            TimeUnit.SECONDS.sleep(3);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+//        System.out.println("step 1: sending an email");
+//        System.out.println("Step 2: finished!");
+//    }
+//
+//    public static synchronized void sendSMS(){
+//        System.out.println("step 3: sending a message!");
+//    }
+//    public void phoneCall(){
+//        System.out.println("step 4: I am calling someone");
+//    }
+//
+//    public static void main(String[] args) {
+//        Day4 com = new Day4();
+//        Day4 com1 = new Day4();
+//        new Thread(()->{
+//            com.sendEmail();
+//        },"thread 1").start();
+//
+//        new Thread(()->{
+//            com1.sendSMS();
+//        },"Thread 2").start();
+//
+//    }
+
+
+    //case 4
+    //for non-stack method, your locker will lock the current object: this
+    public static synchronized void sendEmail(){
+        try{
+            TimeUnit.SECONDS.sleep(3);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        System.out.println("step 1: sending an email");
+        System.out.println("Step 2: finished!");
     }
+
+    public  synchronized void sendSMS(){
+        System.out.println("step 3: sending a message!");
+    }
+    public void phoneCall(){
+        System.out.println("step 4: I am calling someone");
+    }
+
+    public static void main(String[] args) {
+        Day4 com = new Day4();
+        Day4 com1 = new Day4();
+        new Thread(()->{
+            com.sendEmail();
+        },"thread 1").start();
+//
+//        new Thread(()->{
+//            com.sendSMS();
+//        },"Thread 2").start();
+        new Thread(()->{
+            com1.sendSMS();
+        },"Thread 2").start();
+
+    }
+
 }
